@@ -253,45 +253,6 @@
             ]
         },
         {
-            "name": "Linterna",
-            "id": "45701416-25e5-4696-8913-0fe1a7604f81",
-            "actions": [
-                {
-                    "name": "Encender/Apagar",
-                    "type": "Button",
-                    "id": "eb38c0a2-7119-428b-baa7-00b89b34f015",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "52389d96-aa9c-41b4-80fd-49592df3a7b6",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Encender/Apagar",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "70b95493-c0f2-4daf-9b98-9ff3d357f34b",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Encender/Apagar",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
             "name": "Inventario",
             "id": "3c22187d-4b86-49a3-9190-954d70eb5008",
             "actions": [
