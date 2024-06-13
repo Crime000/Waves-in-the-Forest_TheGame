@@ -46,7 +46,6 @@ public class MovimientoJugador : MonoBehaviour
         Direction.y = 0f;
         rb.velocity = Direction * velocidad;
 
-        mano.localRotation = 
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
