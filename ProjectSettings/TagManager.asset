@@ -7,6 +7,9 @@ TagManager:
   - Jugador
   - Puerta
   - Bateria
+  - Llave
+  - Candado
+  - Suelo
   layers:
   - Default
   - TransparentFX

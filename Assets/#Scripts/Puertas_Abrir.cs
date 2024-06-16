@@ -28,14 +28,12 @@ public class Puertas_Abrir : MonoBehaviour
             if (estaCerrada == true)
             {
                 estaCerrada = false;
-                Debug.Log("Funciona");
                 puertaCerrada.SetActive(false);
                 puertaAbierta.SetActive(true);
             }
             if (estaCerrada == false)
             {
                 estaCerrada = true;
-                Debug.Log("No Funciona");
                 puertaCerrada.SetActive(true);
                 puertaAbierta.SetActive(false);
             }

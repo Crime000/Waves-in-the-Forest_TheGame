@@ -14,13 +14,16 @@ public class MovimientoJugador : MonoBehaviour
     PlayerInput playerInput;
     public InventarioMenu inventory;
     public Puertas_Abrir interactuarPuertas;
-    public Bateria_Script recogerBateria;
-    public CinemachineVirtualCamera virtualCamera;
-    public InputActionReference Recoger, Abrir, Inventario;
+    public Bateria_Recogible recogerBateria;
+    public Bateria_Script energia;
+    public Abrir_Candado interactuarConCandado;
+    public Notas notas;
+    public InputActionReference Recoger, Abrir, Inventario, Linterna;
 
     public Transform cam, mano;
 
-    public float velocidad;
+    public float velocidad, caida, gravedad;
+    private float multiplicadorGravedad = 3f;
     private bool ActInv = false;
     
     
@@ -32,9 +35,6 @@ public class MovimientoJugador : MonoBehaviour
         cam = Camera.main.transform;
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
-
-        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-        UnityEngine.Cursor.visible = false;
     }
 
     //
@@ -43,10 +43,17 @@ public class MovimientoJugador : MonoBehaviour
     {
         Vector2 leido = playerInput.actions["Movimiento"].ReadValue<Vector2>();
 
+        if(caida <= -5)
+        {
+            caida = -0.2f;
+        }
+
         Vector3 Direction = new Vector3(leido.x, 0, leido.y);
         Direction = cam.transform.forward * leido.y + cam.transform.right * leido.x;
-        Direction.y = 0f;
+        caida += gravedad * multiplicadorGravedad * Time.deltaTime;
+        Direction.y = caida;
         rb.velocity = Direction * velocidad;
+        mano.localRotation = cam.localRotation;
 
     }
 
@@ -60,6 +67,7 @@ public class MovimientoJugador : MonoBehaviour
         Recoger.action.started += recoger;
         Abrir.action.started += abrir;
         Inventario.action.started += inventario;
+        Linterna.action.started += encenderYapagar;
     }
 
     private void OnDisable()
@@ -67,6 +75,7 @@ public class MovimientoJugador : MonoBehaviour
         Recoger.action.started -= recoger;
         Abrir.action.started -= abrir;
         Inventario.action.started -= inventario;
+        Linterna.action.started -= encenderYapagar;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -91,13 +100,23 @@ public class MovimientoJugador : MonoBehaviour
     private void InteractuarConPuertas()
     {
         interactuarPuertas.AbrirPuerta();
+        interactuarConCandado.AbrirCandado();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void InteractuarConBaterias()
+    private void InteractuarConObjeto()
     {
         recogerBateria.RecogerBateria();
+        interactuarConCandado.RecogerUnaLlave();
+        notas.RecogerNota();
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    private void AccionarLinterna()
+    {
+        energia.CambioDeEstado();
     }
 
 
@@ -108,7 +127,7 @@ public class MovimientoJugador : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public void recoger(InputAction.CallbackContext context)
     {
-        InteractuarConBaterias();
+        InteractuarConObjeto();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -124,6 +143,12 @@ public class MovimientoJugador : MonoBehaviour
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    public void encenderYapagar(InputAction.CallbackContext context)
+    {
+        AccionarLinterna();
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void OnTriggerEnter(Collider other)
     {
@@ -133,7 +158,23 @@ public class MovimientoJugador : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Bateria"))
         {
-            recogerBateria = other.GetComponent<Bateria_Script>();
+            recogerBateria = other.GetComponent<Bateria_Recogible>();
+        }
+        if (other.gameObject.CompareTag("Candado"))
+        {
+            interactuarConCandado = interactuarConCandado.GetComponent<Abrir_Candado>();
+        }
+        if (other.gameObject.CompareTag("Llave"))
+        {
+            interactuarConCandado = interactuarConCandado.GetComponent<Abrir_Candado>();
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Suelo"))
+        {
+            caida = -0.2f;
         }
     }
 }
